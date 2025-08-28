@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ReplyMarket — 10-minute marketplace for viral replies</title>
+  <meta name="description" content="Post a bounty, get the perfect viral reply in minutes. Writers compete. You pick the winner.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- animated background -->
+  <div class="bg">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+  </div>
+
+  <header class="nav">
+    <div class="container nav__row">
+      <a class="brand" href="#">
+        <!-- minimal non-AI logo (inline SVG) -->
+        <svg class="brand__icon" viewBox="0 0 64 64" aria-hidden="true">
+          <rect x="2" y="2" width="60" height="60" rx="14" class="ic-bg"/>
+          <rect x="12" y="16" width="30" height="18" rx="6" class="ic-bubble"/>
+          <polygon points="32,34 27,40 40,34" class="ic-bubble"/>
+          <path d="M26 25 L20 21 L26 17" class="ic-stroke"/>
+          <path d="M20 21 C34 21, 46 23, 48 30" class="ic-stroke"/>
+          <g transform="translate(38,8) rotate(15)">
+            <rect x="0" y="0" width="16" height="10" rx="3" class="ic-tag"/>
+            <circle cx="3" cy="5" r="1.2" class="ic-hole"/>
+          </g>
+        </svg>
+        <span class="brand__text">Reply<span class="accent">Market</span></span>
+      </a>
+      <button class="nav__toggle" aria-label="Open menu">☰</button>
+      <nav class="nav__links">
+        <a href="#how" class="link">How it works</a>
+        <a href="#pricing" class="link">Pricing</a>
+        <a href="#faq" class="link">FAQ</a>
+        <a class="btn btn--ghost" href="#start">Create bounty</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="start">
+      <div class="container hero__grid">
+        <div class="reveal">
+          <h1>Get the perfect viral reply in <span class="accent">10 minutes</span></h1>
+          <p class="muted">Creators post a bounty. Writers compete. You pick a winner. Clean. Fast. Fair.</p>
+          <div class="cta">
+            <a class="btn btn--primary" href="#how">See how it works</a>
+            <a class="btn btn--ghost" href="#pricing">View pricing</a>
+          </div>
+
+          <!-- live calculator -->
+          <div class="card calc reveal">
+            <h3>Quick price calculator</h3>
+            <label for="prize">Prize amount</label>
+            <div class="calc__input">
+              <span class="currency">$</span>
+              <input id="prize" type="number" min="0" step="1" placeholder="200" />
+            </div>
+            <div class="calc__row"><span>Platform fee (25%)</span><strong id="fee">$0.00</strong></div>
+            <div class="calc__row"><span>Total cost</span><strong id="total">$0.00</strong></div>
+            <p class="tiny muted">Demo only — real payments run in the app.</p>
+          </div>
+        </div>
+
+        <div class="card hero__card reveal">
+          <ul class="ticks">
+            <li>Entries hidden until deadline</li>
+            <li>Instant payouts to winners</li>
+            <li>Ratings & history for quality</li>
+          </ul>
+          <div class="stat">
+            <span class="stat__big">10 min</span>
+            <span class="stat__label">average contest time</span>
+          </div>
+        </div>
+      </div>
+      <div class="shine" aria-hidden="true"></div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how">
+      <div class="container">
+        <h2 class="reveal">How it works</h2>
+        <div class="grid-3">
+          <div class="card step reveal">
+            <div class="step__num">1</div>
+            <h3>Create a bounty</h3>
+            <p>Paste the X link, set prize & deadline, pay upfront.</p>
+          </div>
+          <div class="card step reveal">
+            <div class="step__num">2</div>
+            <h3>Writers compete</h3>
+            <p>Submissions stay private until time’s up or you lock.</p>
+          </div>
+          <div class="card step reveal">
+            <div class="step__num">3</div>
+            <h3>Pick the winner</h3>
+            <p>Winner gets paid. You post the line. Done.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <h2 class="reveal">Pricing</h2>
+        <div class="grid-3">
+          <div class="card price reveal">
+            <h3>Starter</h3>
+            <p class="muted">For quick tests</p>
+            <div class="price__num">$5–$25</div>
+            <ul class="list">
+              <li>15–30 min deadlines</li>
+              <li>Hidden entries</li>
+              <li>1 winner</li>
+            </ul>
+            <a class="btn btn--ghost" href="#start">Start a bounty</a>
+          </div>
+          <div class="card price price--highlight reveal">
+            <h3>Pro</h3>
+            <p class="muted">Serious engagement</p>
+            <div class="price__num">$25–$250</div>
+            <ul class="list">
+              <li>Priority placement</li>
+              <li>Advanced filters</li>
+              <li>Ratings & history</li>
+            </ul>
+            <a class="btn btn--primary" href="#start">Start a bounty</a>
+          </div>
+          <div class="card price reveal">
+            <h3>Teams</h3>
+            <p class="muted">Agencies & brands</p>
+            <div class="price__num">Custom</div>
+            <ul class="list">
+              <li>Multiple seats</li>
+              <li>Bulk credits</li>
+              <li>Dedicated support</li>
+            </ul>
+            <a class="btn btn--ghost" href="#start">Talk to us</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+      <div class="container faq">
+        <h2 class="reveal">FAQ</h2>
+        <details class="card reveal">
+          <summary>Is this the real product?</summary>
+          <p>This is the public website. The app runs separately and handles payments & contests.</p>
+        </details>
+        <details class="card reveal">
+          <summary>Can I use my own domain?</summary>
+          <p>Yes. Add a custom domain in your hosting settings.</p>
+        </details>
+        <details class="card reveal">
+          <summary>How do creators get paid?</summary>
+          <p>Winners are paid instantly in the app via Stripe Connect.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__row">
+      <span>© <span id="year"></span> ReplyMarket</span>
+      <span class="muted">10-minute marketplace for viral replies</span>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav
+    const toggle=document.querySelector('.nav__toggle');
+    const links=document.querySelector('.nav__links');
+    toggle.addEventListener('click',()=>links.classList.toggle('open'));
+
+    // Calculator
+    const prize=document.getElementById('prize');
+    const fee=document.getElementById('fee');
+    const total=document.getElementById('total');
+    const fmt=n=> (isNaN(n)?0:n).toLocaleString(undefined,{style:'currency',currency:'USD'});
+    function update(){ const p=Number(prize.value||0); fee.textContent=fmt(p*0.25); total.textContent=fmt(p*1.25); }
+    prize.addEventListener('input',update); update();
+
+    // Year
+    document.getElementById('year').textContent=new Date().getFullYear();
+
+    // Scroll reveal
+    const io=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+    },{threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  </script>
+</body>
+</html>
