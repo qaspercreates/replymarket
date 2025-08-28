@@ -11,6 +11,7 @@
     .row{display:flex;justify-content:space-between;align-items:center;margin:10px 0}
     .muted{color:#A5B0C6}
     .empty{opacity:.8;text-align:center;padding:40px 0}
+    .err{background:#2a1c1c;border:1px solid #613b3b;color:#f7c6c6;padding:12px;border-radius:12px;margin-top:12px}
   </style>
 </head>
 <body>
@@ -27,26 +28,41 @@
   <main class="section">
     <div class="container">
       <h1>Live bounties</h1>
-      <p class="muted">We load open bounties from GitHub Issues in real time.</p>
+      <p class="muted">Open bounties are pulled from our public GitHub repo.</p>
+      <div id="notice" class="err" style="display:none"></div>
       <div id="list" class="grid" style="margin-top:16px"></div>
       <div id="none" class="empty" style="display:none">No open bounties yet.</div>
     </div>
   </main>
 
   <script>
-  // ====== EDIT THIS: your GitHub user/org ======
-  const OWNER = "YOUR-USERNAME";
-  const REPO  = "replymarket-bounties";
-  // ============================================
+  // Auto-detect GitHub owner from GitHub Pages hostname (username.github.io)
+  function detectOwner(){
+    const host = location.hostname.toLowerCase();
+    if(host.endsWith("github.io")) return host.split(".")[0];
+    const qp = new URL(location.href).searchParams.get("owner");
+    if(qp) return qp;
+    const meta = document.querySelector('meta[name="rm-owner"]');
+    return meta ? meta.content.trim() : "";
+  }
+  const OWNER = detectOwner();                // e.g. "your-username"
+  const REPO  = "replymarket-bounties";       // bounties repo name (fixed)
+
+  const notice = document.getElementById("notice");
+  const list = document.getElementById("list");
+  const none = document.getElementById("none");
+
+  if(!OWNER){
+    notice.style.display="block";
+    notice.innerHTML = 'Couldn’t detect owner. If you’re on a custom domain, add <code>?owner=YOUR-USERNAME</code> to the URL.';
+  }
 
   const ISSUE_TEMPLATE_LINK = `https://github.com/${OWNER}/${REPO}/issues/new?template=bounty.yml`;
   document.getElementById("new-bounty").href = ISSUE_TEMPLATE_LINK;
 
   const api = `https://api.github.com/repos/${OWNER}/${REPO}/issues?state=open&labels=bounty&per_page=50`;
-  const list = document.getElementById("list");
-  const none = document.getElementById("none");
 
-  function get(body, label){
+  function field(body, label){
     const rx = new RegExp(`${label}\\s*[:|-]\\s*(.*)`, 'i');
     const m = (body||"").match(rx);
     return m ? m[1].trim() : "";
@@ -61,23 +77,22 @@
   fetch(api).then(r=>r.json()).then(items=>{
     if(!Array.isArray(items) || items.message){ none.style.display="block"; return; }
     if(!items.length){ none.style.display="block"; return; }
-
     items.forEach(it=>{
       const b = it.body||"";
-      const prize = get(b,"Prize");
-      const deadl = get(b,"Deadline");
-      const tweet = get(b,"Tweet URL");
-      const brief = get(b,"Brief");
+      const prize = field(b,"Prize");
+      const deadl = field(b,"Deadline");
+      const tweet = field(b,"Tweet URL");
+      const brief = field(b,"Brief");
       const left  = minutesLeft(it.created_at, deadl);
 
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
         <div class="row">
-          <span class="pill">⏱ ${left}m left</span>
+          <span class="pill">${left>0?`⏱ ${left}m left`:"⛔ expired"}</span>
           <span class="pill">💰 ${prize || "—"}</span>
         </div>
-        <h3 style="margin:6px 0 8px">${(it.title||"").replace(/^\[.*?\]\s*/,'')}</h3>
+        <h3 style="margin:6px 0 8px">${(it.title||"").replace(/^$begin:math:display$.*?$end:math:display$\s*/,'')}</h3>
         <p class="muted" style="margin:0 0 10px">${brief || "No brief"}</p>
         <div class="row">
           <a class="btn btn--ghost" href="${tweet || it.html_url}" target="_blank" rel="noopener">View tweet</a>
@@ -85,7 +100,9 @@
         </div>`;
       list.appendChild(card);
     });
-  }).catch(()=>{ none.style.display="block"; });
+  }).catch(()=>{
+    none.style.display="block";
+  });
   </script>
 </body>
 </html>
