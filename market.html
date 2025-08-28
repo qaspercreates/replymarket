@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>ReplyMarket — Live Bounties</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+    .pill{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:12px;color:#A5B0C6}
+    .row{display:flex;justify-content:space-between;align-items:center;margin:10px 0}
+    .muted{color:#A5B0C6}
+    .empty{opacity:.8;text-align:center;padding:40px 0}
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav__row">
+      <a class="brand" href="./"><span class="brand__text">Reply<span class="accent">Market</span></span></a>
+      <nav class="nav__links">
+        <a href="./">Home</a>
+        <a class="btn btn--primary" id="new-bounty" target="_blank" rel="noopener">Create bounty</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <h1>Live bounties</h1>
+      <p class="muted">We load open bounties from GitHub Issues in real time.</p>
+      <div id="list" class="grid" style="margin-top:16px"></div>
+      <div id="none" class="empty" style="display:none">No open bounties yet.</div>
+    </div>
+  </main>
+
+  <script>
+  // ====== EDIT THIS: your GitHub user/org ======
+  const OWNER = "YOUR-USERNAME";
+  const REPO  = "replymarket-bounties";
+  // ============================================
+
+  const ISSUE_TEMPLATE_LINK = `https://github.com/${OWNER}/${REPO}/issues/new?template=bounty.yml`;
+  document.getElementById("new-bounty").href = ISSUE_TEMPLATE_LINK;
+
+  const api = `https://api.github.com/repos/${OWNER}/${REPO}/issues?state=open&labels=bounty&per_page=50`;
+  const list = document.getElementById("list");
+  const none = document.getElementById("none");
+
+  function get(body, label){
+    const rx = new RegExp(`${label}\\s*[:|-]\\s*(.*)`, 'i');
+    const m = (body||"").match(rx);
+    return m ? m[1].trim() : "";
+  }
+  function minutesLeft(createdAt, deadline){
+    const m = (deadline||"").toLowerCase();
+    const mins = m.includes("15")?15: m.includes("60")?60: m.includes("24")?24*60: 30;
+    const end = new Date(createdAt).getTime() + mins*60*1000;
+    return Math.max(0, Math.round((end - Date.now())/60000));
+  }
+
+  fetch(api).then(r=>r.json()).then(items=>{
+    if(!Array.isArray(items) || items.message){ none.style.display="block"; return; }
+    if(!items.length){ none.style.display="block"; return; }
+
+    items.forEach(it=>{
+      const b = it.body||"";
+      const prize = get(b,"Prize");
+      const deadl = get(b,"Deadline");
+      const tweet = get(b,"Tweet URL");
+      const brief = get(b,"Brief");
+      const left  = minutesLeft(it.created_at, deadl);
+
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="row">
+          <span class="pill">⏱ ${left}m left</span>
+          <span class="pill">💰 ${prize || "—"}</span>
+        </div>
+        <h3 style="margin:6px 0 8px">${(it.title||"").replace(/^\[.*?\]\s*/,'')}</h3>
+        <p class="muted" style="margin:0 0 10px">${brief || "No brief"}</p>
+        <div class="row">
+          <a class="btn btn--ghost" href="${tweet || it.html_url}" target="_blank" rel="noopener">View tweet</a>
+          <a class="btn btn--primary" href="${it.html_url}" target="_blank" rel="noopener">Open bounty</a>
+        </div>`;
+      list.appendChild(card);
+    });
+  }).catch(()=>{ none.style.display="block"; });
+  </script>
+</body>
+</html>
