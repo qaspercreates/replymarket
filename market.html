@@ -36,31 +36,31 @@
   </main>
 
   <script>
-  // Auto-detect GitHub owner from GitHub Pages hostname (username.github.io)
+  // Detect owner from username.github.io
   function detectOwner(){
     const host = location.hostname.toLowerCase();
     if(host.endsWith("github.io")) return host.split(".")[0];
     const qp = new URL(location.href).searchParams.get("owner");
-    if(qp) return qp;
-    const meta = document.querySelector('meta[name="rm-owner"]');
-    return meta ? meta.content.trim() : "";
+    return qp || "";
   }
-  const OWNER = detectOwner();                // e.g. "your-username"
-  const REPO  = "replymarket-bounties";       // bounties repo name (fixed)
+  const OWNER = detectOwner();                 // e.g., "qaspercreates"
+  const REPO  = "replymarket-bounties";        // your bounties repo
 
   const notice = document.getElementById("notice");
-  const list = document.getElementById("list");
-  const none = document.getElementById("none");
+  const list   = document.getElementById("list");
+  const none   = document.getElementById("none");
 
   if(!OWNER){
     notice.style.display="block";
-    notice.innerHTML = 'Couldn’t detect owner. If you’re on a custom domain, add <code>?owner=YOUR-USERNAME</code> to the URL.';
+    notice.innerHTML = 'Couldn’t detect owner. If using a custom domain, open <code>market.html?owner=YOUR-USERNAME</code>.';
   }
 
+  // Link to the Issue Form
   const ISSUE_TEMPLATE_LINK = `https://github.com/${OWNER}/${REPO}/issues/new?template=bounty.yml`;
   document.getElementById("new-bounty").href = ISSUE_TEMPLATE_LINK;
 
-  const api = `https://api.github.com/repos/${OWNER}/${REPO}/issues?state=open&labels=bounty&per_page=50`;
+  // Fetch ALL open issues (no label filter) and ignore PRs
+  const api = `https://api.github.com/repos/${OWNER}/${REPO}/issues?state=open&per_page=50`;
 
   function field(body, label){
     const rx = new RegExp(`${label}\\s*[:|-]\\s*(.*)`, 'i');
@@ -76,8 +76,11 @@
 
   fetch(api).then(r=>r.json()).then(items=>{
     if(!Array.isArray(items) || items.message){ none.style.display="block"; return; }
-    if(!items.length){ none.style.display="block"; return; }
-    items.forEach(it=>{
+    // keep only issues that look like bounties (have "Tweet URL" or "Prize" in the body) and are not PRs
+    const bounties = items.filter(it => !it.pull_request && /Tweet URL|Prize amount/i.test(it.body||""));
+    if(!bounties.length){ none.style.display="block"; return; }
+
+    bounties.forEach(it=>{
       const b = it.body||"";
       const prize = field(b,"Prize");
       const deadl = field(b,"Deadline");
@@ -100,9 +103,7 @@
         </div>`;
       list.appendChild(card);
     });
-  }).catch(()=>{
-    none.style.display="block";
-  });
+  }).catch(()=>{ none.style.display="block"; });
   </script>
 </body>
 </html>
