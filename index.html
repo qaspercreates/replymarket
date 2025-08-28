@@ -3,107 +3,125 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ReplyMarket — 10-minute marketplace for viral replies</title>
-  <meta name="description" content="Post a bounty, get the perfect viral reply in minutes. Writers compete. You pick the winner.">
+  <title>ReplyMarket — Viral reply bounties (10% fee, no subscriptions)</title>
+  <meta name="description" content="Post a bounty, get the perfect viral reply in minutes. No subscriptions. 10% platform fee.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+    .pill{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:12px;color:#A5B0C6}
+    .row{display:flex;justify-content:space-between;align-items:center;margin:10px 0}
+    .muted{color:#A5B0C6}
+    .empty{opacity:.8;text-align:center;padding:40px 0}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+    .ctrl{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 12px;color:#E8ECF5}
+    .ctrl select,.ctrl input{all:unset;color:#fff}
+    .err{background:#2a1c1c;border:1px solid #613b3b;color:#f7c6c6;padding:12px;border-radius:12px;margin-top:12px}
+  </style>
 </head>
 <body>
-  <div class="bg">
-    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
-  </div>
+  <!-- bg blobs -->
+  <div class="bg"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
 
   <header class="nav">
     <div class="container nav__row">
       <a class="brand" href="#"><span class="brand__text">Reply<span class="accent">Market</span></span></a>
       <button class="nav__toggle" aria-label="Open menu">☰</button>
       <nav class="nav__links">
+        <a href="#market" class="link">Marketplace</a>
         <a href="#how" class="link">How it works</a>
-        <a href="#pricing" class="link">Pricing</a>
         <a href="#faq" class="link">FAQ</a>
-        <a class="btn btn--ghost" href="./market.html">Create bounty</a>
+        <a class="btn btn--primary" id="createBtn" target="_blank" rel="noopener">Create bounty</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <section class="hero" id="start">
+    <!-- HERO -->
+    <section class="hero">
       <div class="container hero__grid">
         <div class="reveal">
-          <h1>Get the perfect viral reply in <span class="accent">10 minutes</span></h1>
-          <p class="muted">Creators post a bounty. Writers compete. You pick a winner. Clean. Fast. Fair.</p>
+          <h1>Viral reply bounties — fast, fair, <span class="accent">no subscriptions</span></h1>
+          <p class="muted">Buyers pay prize + <b>10% platform fee</b>. Writers compete. You pick a winner in minutes.</p>
           <div class="cta">
-            <a class="btn btn--primary" href="./market.html">Create bounty</a>
-            <a class="btn btn--ghost" href="#pricing">View pricing</a>
+            <a class="btn btn--primary" href="#market">Browse bounties</a>
+            <a class="btn btn--ghost" id="createBtn2" target="_blank" rel="noopener">Post a bounty</a>
           </div>
 
+          <!-- tiny calculator -->
           <div class="card calc reveal">
-            <h3>Quick price calculator</h3>
+            <h3>Total cost (10% fee)</h3>
             <label for="prize">Prize amount</label>
             <div class="calc__input"><span class="currency">$</span><input id="prize" type="number" min="0" step="1" placeholder="200" /></div>
-            <div class="calc__row"><span>Platform fee (25%)</span><strong id="fee">$0.00</strong></div>
+            <div class="calc__row"><span>Platform fee (10%)</span><strong id="fee">$0.00</strong></div>
             <div class="calc__row"><span>Total cost</span><strong id="total">$0.00</strong></div>
-            <p class="tiny muted">Demo only — real payments handled per bounty.</p>
+            <p class="tiny muted">Demo only — pay the winner directly using the payment link on the bounty.</p>
           </div>
         </div>
 
         <div class="card hero__card reveal">
           <ul class="ticks">
-            <li>Entries hidden until deadline</li>
-            <li>Instant payouts to winners</li>
-            <li>Ratings & history for quality</li>
+            <li>Entries stay private on GitHub until you read them</li>
+            <li>Winners paid by buyer (PayPal/Stripe link)</li>
+            <li>You own the winning line</li>
           </ul>
-          <div class="stat">
-            <span class="stat__big">10 min</span>
-            <span class="stat__label">average contest time</span>
-          </div>
+          <div class="stat"><span class="stat__big">10 min</span><span class="stat__label">avg contest time</span></div>
         </div>
       </div>
       <div class="shine" aria-hidden="true"></div>
     </section>
 
+    <!-- MARKETPLACE ON HOMEPAGE -->
+    <section class="section" id="market">
+      <div class="container">
+        <h2 class="reveal">Marketplace — live bounties</h2>
+
+        <div class="controls">
+          <div class="ctrl"><input id="search" placeholder="Search brief or title…" /></div>
+          <div class="ctrl">
+            <select id="cat">
+              <option value="">All categories</option>
+              <option>Pop Culture</option><option>Sports</option><option>Music</option>
+              <option>Tech</option><option>Brand</option><option>Other</option>
+            </select>
+          </div>
+          <div class="ctrl">
+            <select id="sort">
+              <option value="soon">Sort: ending soon</option>
+              <option value="new">Sort: newest</option>
+              <option value="prize">Sort: highest prize</option>
+            </select>
+          </div>
+          <a class="btn btn--ghost" id="createBtn3" target="_blank" rel="noopener">+ Post a bounty</a>
+        </div>
+
+        <div id="notice" class="err" style="display:none"></div>
+        <div id="list" class="grid" style="margin-top:16px"></div>
+        <div id="none" class="empty" style="display:none">No open bounties yet.</div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
     <section class="section" id="how">
       <div class="container">
         <h2 class="reveal">How it works</h2>
         <div class="grid-3">
-          <div class="card step reveal"><div class="step__num">1</div><h3>Create a bounty</h3><p>Click “Create bounty”, fill the form, post.</p></div>
-          <div class="card step reveal"><div class="step__num">2</div><h3>Writers compete</h3><p>They add one comment (hidden from your site; on GitHub issue).</p></div>
-          <div class="card step reveal"><div class="step__num">3</div><h3>Pick the winner</h3><p>Comment “WINNER: @username”, then pay the winner.</p></div>
+          <div class="card step reveal"><div class="step__num">1</div><h3>Create a bounty</h3><p>Click “Create bounty”, fill the form, post the issue.</p></div>
+          <div class="card step reveal"><div class="step__num">2</div><h3>Writers compete</h3><p>They comment their entry on your issue (one each).</p></div>
+          <div class="card step reveal"><div class="step__num">3</div><h3>Pick the winner</h3><p>Comment “WINNER: @username”, then pay your winner.</p></div>
         </div>
       </div>
     </section>
 
-    <section class="section" id="pricing">
-      <div class="container">
-        <h2 class="reveal">Pricing</h2>
-        <div class="grid-3">
-          <div class="card price reveal">
-            <h3>Starter</h3><p class="muted">For quick tests</p><div class="price__num">$5–$25</div>
-            <ul class="list"><li>15–30 min deadlines</li><li>Hidden entries</li><li>1 winner</li></ul>
-            <a class="btn btn--ghost" href="./market.html">Start a bounty</a>
-          </div>
-          <div class="card price price--highlight reveal">
-            <h3>Pro</h3><p class="muted">Serious engagement</p><div class="price__num">$25–$250</div>
-            <ul class="list"><li>Priority placement</li><li>Advanced filters</li><li>Ratings & history</li></ul>
-            <a class="btn btn--primary" href="./market.html">Start a bounty</a>
-          </div>
-          <div class="card price reveal">
-            <h3>Teams</h3><p class="muted">Agencies & brands</p><div class="price__num">Custom</div>
-            <ul class="list"><li>Multiple seats</li><li>Bulk credits</li><li>Dedicated support</li></ul>
-            <a class="btn btn--ghost" href="./market.html">Talk to us</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
+    <!-- FAQ -->
     <section class="section" id="faq">
       <div class="container faq">
         <h2 class="reveal">FAQ</h2>
-        <details class="card reveal"><summary>Is this the real product?</summary><p>This is the public website. The bounties run on GitHub Issues.</p></details>
-        <details class="card reveal"><summary>How do I create a bounty?</summary><p>Click “Create bounty” — it opens a form in our GitHub bounties box.</p></details>
-        <details class="card reveal"><summary>How do I pick a winner?</summary><p>Comment “WINNER: @username” on the bounty issue, then pay them.</p></details>
+        <details class="card reveal"><summary>Why no subscriptions?</summary><p>Friction kills growth. Buyers only pay a 10% platform fee on top of the prize. Writers pay nothing.</p></details>
+        <details class="card reveal"><summary>How are payments handled?</summary><p>Each bounty can include a PayPal or Stripe Payment Link. The buyer pays the winner directly after announcing the winner.</p></details>
+        <details class="card reveal"><summary>What about abuse?</summary><p>No harassment, hate, or doxxing. Buyers may ignore entries that break rules. Repeat abusers are banned.</p></details>
       </div>
     </section>
   </main>
@@ -111,21 +129,109 @@
   <footer class="footer">
     <div class="container footer__row">
       <span>© <span id="year"></span> ReplyMarket</span>
-      <span class="muted">10-minute marketplace for viral replies</span>
+      <span class="muted">Viral reply bounties — 10% fee, no subscriptions</span>
     </div>
   </footer>
 
   <script>
+    // ===== BASIC UI
     const toggle=document.querySelector('.nav__toggle');
     const links=document.querySelector('.nav__links');
     toggle.addEventListener('click',()=>links.classList.toggle('open'));
-    const prize=document.getElementById('prize');
-    const fee=document.getElementById('fee');
-    const total=document.getElementById('total');
-    const fmt=n=> (isNaN(n)?0:n).toLocaleString(undefined,{style:'currency',currency:'USD'});
-    function update(){ const p=Number(prize.value||0); fee.textContent=fmt(p*0.25); total.textContent=fmt(p*1.25); }
-    prize.addEventListener('input',update); update();
     document.getElementById('year').textContent=new Date().getFullYear();
+    const fmt=n=> (isNaN(n)?0:n).toLocaleString(undefined,{style:'currency',currency:'USD'});
+    const prize=document.getElementById('prize'),fee=document.getElementById('fee'),total=document.getElementById('total');
+    function upd(){const p=Number(prize.value||0);fee.textContent=fmt(p*0.10);total.textContent=fmt(p*1.10);} prize.addEventListener('input',upd); upd();
+
+    // ===== CONFIG (owner of the bounties repo)
+    const OWNER = "qaspercreates";               // <- change if needed
+    const REPO  = "replymarket-bounties";
+    const ISSUE_FORM = `https://github.com/${OWNER}/${REPO}/issues/new?template=bounty.yml`;
+    ['createBtn','createBtn2','createBtn3'].forEach(id=>document.getElementById(id).href=ISSUE_FORM);
+
+    // ===== MARKETPLACE DATA
+    const list=document.getElementById('list'), none=document.getElementById('none'), notice=document.getElementById('notice');
+    const api=`https://api.github.com/repos/${OWNER}/${REPO}/issues?state=open&per_page=100`;
+
+    // helper: get the line after a label (supports headings/bold)
+    function valueAfter(md,label){
+      const esc = label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      const re  = new RegExp(`(?:^|\\n)\\s*(?:[#*\\s>]*)(?:\\*\\*|###\\s*)?${esc}(?:\\*\\*)?\\s*\\n+([^\\n]+)`, 'i');
+      const m = (md||"").match(re);
+      return m ? m[1].trim() : "";
+    }
+    function minutesLeft(createdAt, deadline){
+      const m=(deadline||"").toLowerCase(); const mins= m.includes("15")?15: m.includes("60")?60: m.includes("24")?24*60: 30;
+      const end=new Date(createdAt).getTime()+mins*60*1000; return Math.max(0, Math.round((end-Date.now())/60000));
+    }
+
+    function render(items){
+      list.innerHTML="";
+      if(!items.length){none.style.display="block"; return;}
+      none.style.display="none";
+      items.forEach(it=>{
+        if(it.pull_request) return; // ignore PRs
+        const b=it.body||"";
+        const prize = valueAfter(b,"Prize") || valueAfter(b,"Prize amount");
+        const cat   = valueAfter(b,"Category");
+        const deadl = valueAfter(b,"Deadline");
+        const tweet = valueAfter(b,"Tweet URL");
+        const brief = valueAfter(b,"Brief");
+        const left  = minutesLeft(it.created_at, deadl);
+        const card=document.createElement('div'); card.className='card';
+        card.dataset.cat = (cat||"").toLowerCase();
+        card.dataset.prize = parseFloat(String(prize).replace(/[^0-9.]/g,''))||0;
+        card.dataset.left  = left;
+        card.innerHTML = `
+          <div class="row">
+            <span class="pill">${cat || "Other"}</span>
+            <span class="pill">💰 ${prize || "—"}</span>
+          </div>
+          <h3 style="margin:6px 0 4px">${(it.title||"").replace(/^$begin:math:display$.*?$end:math:display$\s*/,'')}</h3>
+          <p class="muted" style="margin:0 0 8px">${brief || "No brief"}</p>
+          <div class="row">
+            <span class="pill">${left>0?`⏱ ${left}m left`:"⛔ expired"}</span>
+            <div>
+              <a class="btn btn--ghost" href="${tweet || it.html_url}" target="_blank" rel="noopener">View tweet</a>
+              <a class="btn btn--primary" href="${it.html_url}" target="_blank" rel="noopener">Open bounty</a>
+            </div>
+          </div>`;
+        list.appendChild(card);
+      });
+      applyFilters();
+    }
+
+    function applyFilters(){
+      const q=(document.getElementById('search').value||"").toLowerCase();
+      const cat=(document.getElementById('cat').value||"").toLowerCase();
+      const sort=document.getElementById('sort').value;
+      const cards=[...list.children];
+      cards.forEach(c=>{
+        const text=c.textContent.toLowerCase();
+        const okText = !q || text.includes(q);
+        const okCat  = !cat || c.dataset.cat===cat;
+        c.style.display = (okText && okCat) ? "" : "none";
+      });
+      // sort
+      const vis=cards.filter(c=>c.style.display!=="none");
+      vis.sort((a,b)=>{
+        if(sort==="new")  return 0; // GitHub already returns newest first
+        if(sort==="prize") return (parseFloat(b.dataset.prize)-parseFloat(a.dataset.prize));
+        // ending soon
+        return (parseInt(a.dataset.left)-parseInt(b.dataset.left));
+      });
+      vis.forEach(c=>list.appendChild(c));
+      none.style.display = vis.length? "none":"block";
+    }
+
+    fetch(api).then(r=>r.json()).then(items=>{
+      if(!Array.isArray(items)){ none.style.display="block"; return; }
+      render(items);
+    }).catch(()=>{ none.style.display="block"; });
+
+    ['search','cat','sort'].forEach(id=>document.getElementById(id).addEventListener('input',applyFilters));
+
+    // Scroll reveal
     const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');}})},{threshold:.12});
     document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   </script>
